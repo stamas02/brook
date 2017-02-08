@@ -29,7 +29,7 @@ class Trainer:
             #datax = np.reshape(datax, (len(datax), 1, -1))
             self.trader.brain.fit(np.array(datax),np.array(datay),self.batch_size)
             self.trader.play()
-            self.trader.reset() 
+            self.trader.reset()
 
     def visual_check(self, data, window):
         signal = sm.preprocess(data[window:window + self.backward_look])
