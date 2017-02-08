@@ -6,7 +6,6 @@ from train import Trainer
 from market_simulator import MarketSimulator
 from trader import Trader
 from network import Network
-import matplotlib.pyplot as plt
 
 
 
