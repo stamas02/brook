@@ -19,7 +19,7 @@ BATCH_SIZE = 90
 NROF_EOPCH = 50
 TRAIN_TEST_RATIO = 0.95
 #DATA_SOURCE = '/media/tamas/Sör2/CurrencyData/data.npz'
-DATA_SOURCE = '~/Datasets/Currency/data.npz'
+DATA_SOURCE = '/home/tamassuveges/Datasets/Currency/data.npz'
 
 
 
