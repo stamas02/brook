@@ -25,6 +25,7 @@ class Trainer:
         datay = [sm.future_description(
             data[window + self.backward_look:window + self.backward_look + self.forward_look] - data[
                 window + self.backward_look - 1]) for window in choosen_windows]
+        np.savez("converted_data", datax=datax, datay=datay)
         for epoch in range(self.nrof_epoch):
             #datax = np.reshape(datax, (len(datax), 1, -1))
             self.trader.brain.fit(np.array(datax),np.array(datay),self.batch_size)

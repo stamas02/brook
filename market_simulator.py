@@ -22,7 +22,7 @@ class MarketSimulator():
     def get_current_price(self):
         return self._data[self._idx]
 
-    def cancel_contract(self, contract):
+    def cancel(self, contract):
 
         current_price = self._data[self._idx]
         purchase_price = contract["price"]

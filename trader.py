@@ -49,21 +49,25 @@ class Trader:
         buy_profit = self.calculate_profit(current_price,current_price+maxx,self._source.margin,self.stake,"buy")
         short_profit = self.calculate_profit(current_price,current_price+minn,self._source.margin,self.stake,"short")
         if buy_profit > short_profit and buy_profit > 1:
-            contract = self._source.buy(self.stake)
+            _contract = self._source.buy(self.stake)
+            contract = {"contract: " : _contract}
             contract["trader_data"] = {"life_time": 0,
                                        "risk": 0,
                                        "estimated_maximum": current_price+maxx,
                                        "estimated_minimum": current_price+minn, "estimated_mean": mean,
-                                       "estiamted_std": std,}
+                                       "estiamted_std": std,
+                                       "type" : "Buy"}
             self._contracts.append(contract)
             made_action = True
         elif buy_profit < short_profit and short_profit > 1:
-            contract = self._source.short(self.stake)
+            _contract = self._source.short(self.stake)
+            contract = {"contract: " : _contract}
             contract["trader_data"] = {"life_time": 0,
                                        "risk": 0,
                                        "estimated_maximum": current_price+maxx,
                                        "estimated_minimum": current_price+minn, "estimated_mean": mean,
-                                       "estiamted_std": std}
+                                       "estiamted_std": std,
+                                       "type": "Short"}
             self._contracts.append(contract)
             made_action = True
 
@@ -89,22 +93,22 @@ class Trader:
                 contract["trader_data"]["life_time"] += 1
                 current_price = self._source.get_current_price()
                 if  contract["trader_data"]["life_time"] > self._max_contract_time:
-                    self._source.cancel_contract(contract)
+                    self._source.cancel(contract["contract"])
                     contract["trader_data"]["life_time"] = -1
                 if  contract["trader_data"]["risk"] > 2:
-                    self._source.cancel_contract(contract)
+                    self._source.cancel(contract)
                     contract["trader_data"]["life_time"] = -1
-                if  contract["type"] == "buy":
+                if  contract["trader_data"]["type"] == "buy":
                     if current_price > contract["trader_data"]["estimated_maximum"]:
-                        self._source.cancel_contract(contract)
+                        self._source.cancel(contract["contract"])
                         contract["trader_data"]["life_time"] = -1
                     if contract["trader_data"]["estimated_maximum"] >current_estimated_maximum:
                         contract["trader_data"]["risk"] += 1
                     elif contract["trader_data"]["risk"] > 0:
                         contract["trader_data"]["risk"] -= 1
-                if  contract["type"] == "short":
+                if  contract["trader_data"]["type"] == "short":
                     if current_price < contract["trader_data"]["estimated_minimum"]:
-                        self._source.cancel_contract(contract)
+                        self._source.cancel(contract["contract"])
                         contract["trader_data"]["life_time"] = -1
                     if contract["trader_data"]["estimated_minimum"] <current_estimated_minimum:
                         contract["trader_data"]["risk"] += 1
