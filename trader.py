@@ -7,13 +7,13 @@ import matplotlib.pyplot as plt
 import cv2
 
 class Trader:
-    def __init__(self, brain,backward_look,nrof_bins, source, ticks_between_actions, max_contract_time):
+    def __init__(self, create_indicator, brain,backward_look, source, ticks_between_actions, max_contract_time):
         self.brain = brain
+        self._create_indicator = create_indicator
         self._source = source
         self._ticks_between_actions = ticks_between_actions
         self._max_contract_time = max_contract_time
         self._backward_look = backward_look
-        self._nrof_bins = nrof_bins
         self.stake = 100
         self._contracts = []
 
@@ -26,11 +26,11 @@ class Trader:
                 self._source.next()
                 continue
 
-            signal = sm.exsax(sm.preprocess(history),self._nrof_bins)
+            indicator_signal = self._create_indicator(history)#sm.exsax(sm.preprocess(history),self._nrof_bins)
             #future  = np.array(self._source.get_future(15))
             #future -= future[0]
             #maxx, minn, mean, std = sm.future_description(future)
-            maxx, minn, mean, std = self.brain.predict(signal)
+            maxx, minn, mean, std = self.brain.predict(indicator_signal)
             if last_action > self._ticks_between_actions:
                 if self.make_contract(maxx, minn, mean, std):
                     last_action = -1
@@ -48,9 +48,9 @@ class Trader:
         current_price = self._source.get_current_price()
         buy_profit = self.calculate_profit(current_price,current_price+maxx,self._source.margin,self.stake,"buy")
         short_profit = self.calculate_profit(current_price,current_price+minn,self._source.margin,self.stake,"short")
-        if buy_profit > short_profit and buy_profit > 1:
+        if buy_profit > short_profit and buy_profit > 2:
             _contract = self._source.buy(self.stake)
-            contract = {"contract: " : _contract}
+            contract = {"contract" : _contract}
             contract["trader_data"] = {"life_time": 0,
                                        "risk": 0,
                                        "estimated_maximum": current_price+maxx,
@@ -59,9 +59,9 @@ class Trader:
                                        "type" : "Buy"}
             self._contracts.append(contract)
             made_action = True
-        elif buy_profit < short_profit and short_profit > 1:
+        elif buy_profit < short_profit and short_profit > 2:
             _contract = self._source.short(self.stake)
-            contract = {"contract: " : _contract}
+            contract = {"contract" : _contract}
             contract["trader_data"] = {"life_time": 0,
                                        "risk": 0,
                                        "estimated_maximum": current_price+maxx,

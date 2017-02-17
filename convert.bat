@@ -1,0 +1,1 @@
+python convert_to_windowed_data.py --source /home/tamassuveges/Datasets/Currency/data.npz --destination /home/tamassuveges/Datasets/Currency/data_windowed --currency AUDCAD --nrof_bins 5 --look_forward 15 --look_backward 20
