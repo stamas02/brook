@@ -22,7 +22,7 @@ if __name__ == "__main__":
     data = np.load(args.source)
     datax = data["datax"]
     datay = data["datay"]
-    original_data = data["original"][100020+int(len(datax) * args.train_test_ratio):,1]
+    original_data = data["original"][100000+int(len(datax) * args.train_test_ratio):,1]
 
     settings = data["settings"].item(0)
     train_datax = data["datax"][0:int(len(datax) * args.train_test_ratio)]

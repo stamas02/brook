@@ -28,4 +28,4 @@ if __name__ == "__main__":
     settings = {"nrof_bins": args.nrof_bins,
                 "look_forward": args.look_forward,
                 "look_backward": args.look_backward}
-    np.savez(args.destination, datax=datax, datay=datay, original=data[args.look_backward:], settings = settings)
+    np.savez(args.destination, datax=datax, datay=datay, original=data[args.look_backward-1:], settings = settings)
